@@ -4,19 +4,11 @@
         <h3>Compose Page</h3>
         <router-link to="/">&laquo; Back </router-link>
         <div style="background: #fff;padding: 4px">
-            <form method="post" @submit.prevent="sendMail">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label>Sender</label>
-                    </div>
-                    <div class="col-md-5">
-                        <input
-                            type="text"
-                            class="form-control"
-                            v-model="sender"
-                        />
-                    </div>
-                </div>
+            <form
+                method="post"
+                @submit.prevent="sendMail"
+                enctype="multipart/form-data"
+            >
                 <div class="row">
                     <div class="col-md-3">
                         <label>Subject</label>
@@ -47,8 +39,6 @@
                     </div>
                     <div class="col-md-5">
                         <textarea
-                            name=""
-                            id=""
                             cols="30"
                             rows="10"
                             class="form-control"
@@ -61,7 +51,13 @@
                         <label>Attachment</label>
                     </div>
                     <div class="col-md-5">
-                        <input type="file" />
+                        <input
+                            type="file"
+                            name="attachments[]"
+                            @change="uploadAttachment"
+                            multiple
+                        />
+                        <input type="text" v-model="attachmentId" />
                     </div>
                 </div>
                 <div class="row">
@@ -78,7 +74,7 @@
 </template>
 <script>
 import Header from "../components/Header";
-
+import { mapState } from "vuex";
 export default {
     components: {
         Header
@@ -86,20 +82,38 @@ export default {
     data() {
         return {
             subject: null,
-            sender: null,
             recipient: null,
-            content: null
+            content: null,
         };
+    },
+    computed: {
+        ...mapState(["attachments"]),
+        attachmentId: {
+            get() {
+                return JSON.stringify(this.$store.state.attachments);
+            },
+            // set(value) {
+
+            // }
+        }
     },
     methods: {
         sendMail() {
             const payload = {
-                sender: this.sender,
                 subject: this.subject,
+                content: this.content,
                 recipient: this.recipient,
-                content: this.content
+                attachmentId: this.attachmentId
             };
             this.$store.dispatch("sendEmail", payload);
+        },
+        uploadAttachment(event) {
+            const files = event.target.files;
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append("attachments", file);
+            }
+            this.$store.dispatch("addAttachment", { files: formData });
         }
     }
 };

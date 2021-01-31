@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\AttachmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use App\Http\Controllers\EmailController;
 |
 */
 Route::resource('emails', EmailController::class);
+Route::resource('attachment', AttachmentController::class);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

@@ -2,9 +2,11 @@
 
 namespace App\Mail;
 
+use App\Http\Controllers\AttachmentController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
 class TransactionMail extends Mailable
@@ -16,9 +18,10 @@ class TransactionMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($files, $request)
     {
-        //
+        $this->files = $files;
+        $this->request = $request;
     }
 
     /**
@@ -28,6 +31,14 @@ class TransactionMail extends Mailable
      */
     public function build()
     {
-        return $this->view('transaction');
+        $email = $this->from($this->request['sender'])
+        ->view('transaction')->with("body", $this->request['content'])
+        ->subject($this->request['subject']);
+        if(count($this->files)) {
+            foreach($this->files as $file) {
+                $email->attach($file);
+            }
+        }
+        return $email;
     }
 }

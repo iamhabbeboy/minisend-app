@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\EmailResource;
-use App\Mail\TransactionMail;
+use App\Http\Controllers\AttachmentController;
 use App\Models\Email;
+use App\Jobs\SendEmailJob;
 
 class EmailController extends Controller
 {
@@ -36,19 +36,26 @@ class EmailController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AttachmentController $attachment, Request $request)
     {
         $validatedData = $request->validate([
-            'sender' => 'required',
             'content' => 'required',
             'subject' => 'required',
             'recipient' => 'required',
         ]);
-        $response = Mail::to($request->sender, $request->subject)
-        ->send(
-            new TransactionMail()
+
+        $files = $attachment->getAttachmentPath(
+            json_decode($request->attachmentId)
         );
+        $emails = explode(',', $request->recipient);
+        $emails = array_map('trim', $emails);
+        $request->merge([
+            "sender" => "info@gmail.com",
+            "recipients" => $emails
+         ]);
+        dispatch(new SendEmailJob($files, $request->all()));
         Email::create($request->all());
+
         return new EmailResource($request);
     }
 

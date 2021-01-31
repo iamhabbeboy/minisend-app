@@ -1,4 +1,4 @@
 export default {
-    users: "Hello world",
-    emails: []
+    emails: [],
+    attachments: []
 };
