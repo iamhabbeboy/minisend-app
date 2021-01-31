@@ -1,14 +1,17 @@
 import Vue from "vue";
+import Vuex from "vuex";
 import VueRouter from "vue-router";
 import MiniSend from "./components/MiniSend";
 import { routes } from "./routes";
+import { store } from "./store/index";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-    routes, // short for `routes: routes`
+    routes
 });
 
 new Vue({
     router,
-    render: (h) => h(MiniSend),
+    store: store,
+    render: h => h(MiniSend)
 }).$mount("#app");
