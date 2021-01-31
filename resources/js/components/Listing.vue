@@ -4,7 +4,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">ID</th>
                     <th scope="col">Sender</th>
                     <th scope="col">Recipient</th>
@@ -16,16 +15,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td scope="row">#</td>
-                    <td>1012</td>
-                    <td>Abiodun Solomon</td>
-                    <td>Damola</td>
-                    <td>testing</td>
-                    <td>sldkfdf</td>
-                    <td>sldfkjsdklf</td>
-                    <td>Failed</td>
-                    <td>sldfkj</td>
+                <tr v-for="(email, index) of emails.data" :key="index">
+                    <td>{{index + 1}}</td>
+                    <td>{{email.sender}}</td>
+                    <td>{{email.recipient}}</td>
+                    <td>{{email.subject}}</td>
+                    <td>{{email.content}}</td>
+                    <td>N/A</td>
+                    <td>{{email.status}}</td>
+                    <td>--</td>
                 </tr>
             </tbody>
         </table>
@@ -36,6 +34,7 @@ import Filters from "./Filters";
 export default {
     components: {
         Filters
-    }
+    },
+    props: ["emails"]
 };
 </script>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\EmailResource;
+use App\Mail\TransactionMail;
+use App\Models\Email;
 
 class EmailController extends Controller
 {
@@ -14,10 +17,7 @@ class EmailController extends Controller
      */
     public function index()
     {
-        return new EmailResource([
-            'name' => 'abiodun',
-            'age' => 20
-            ]);
+        return new EmailResource(Email::all());
     }
 
     /**
@@ -38,7 +38,18 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'sender' => 'required',
+            'content' => 'required',
+            'subject' => 'required',
+            'recipient' => 'required',
+        ]);
+        $response = Mail::to($request->sender, $request->subject)
+        ->send(
+            new TransactionMail()
+        );
+        Email::create($request->all());
+        return new EmailResource($request);
     }
 
     /**
