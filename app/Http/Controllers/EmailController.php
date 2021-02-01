@@ -7,6 +7,7 @@ use App\Http\Resources\EmailResource;
 use App\Http\Controllers\AttachmentController;
 use App\Models\Email;
 use App\Jobs\SendEmailJob;
+use Symfony\Component\Console\Input\Input;
 
 class EmailController extends Controller
 {
@@ -17,7 +18,9 @@ class EmailController extends Controller
      */
     public function index()
     {
-        return new EmailResource(Email::all());
+       return new EmailResource(
+           Email::with('attachments')->orderBy('id', 'DESC')->paginate(10)
+        );
     }
 
     /**
@@ -39,22 +42,23 @@ class EmailController extends Controller
     public function store(AttachmentController $attachment, Request $request)
     {
         $validatedData = $request->validate([
+            'sender' => 'required',
             'content' => 'required',
             'subject' => 'required',
             'recipient' => 'required',
         ]);
-
-        $files = $attachment->getAttachmentPath(
-            json_decode($request->attachmentId)
-        );
+        $attachmentId = json_decode($request->attachmentId);
+        $files = $attachment->getAttachmentPath($attachmentId);
         $emails = explode(',', $request->recipient);
         $emails = array_map('trim', $emails);
         $request->merge([
-            "sender" => "info@gmail.com",
             "recipients" => $emails
          ]);
+
+         $store = Email::create($request->all());
+         $request->merge(["id" => $store->id ?? 0]);
+         $attachment->updateMailAttachmentDetail($store->id ?? 0, $attachmentId);
         dispatch(new SendEmailJob($files, $request->all()));
-        Email::create($request->all());
 
         return new EmailResource($request);
     }
@@ -67,30 +71,50 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        //
+        return new EmailResource(
+            Email::with('attachments')->where(['id' => $id])->first()
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function search(Request $request)
     {
-        //
+        $query = $request->query->all();
+        $searchTerm = $query['query'] ?? '';
+        $status = $query['status'] ?? '';
+        $response = Email::with('attachments');
+        if(!empty($searchTerm)){
+        $response->where('sender', 'like', '%' . $searchTerm . '%')
+        ->orWhere('recipient', 'like', '%' . $searchTerm . '%')
+        ->orWhere('subject', 'like', '%' . $searchTerm . '%');
+        }
+        if(!empty($status)) {
+            $response->where('status', $status);
+        }
+        $data = $response->get();
+        return new EmailResource($data);
     }
-
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Get the recipient filter emails
      */
-    public function update(Request $request, $id)
+    public function recipientEmails(Request $request)
     {
-        //
+        $query = $request->query->all();
+        $email = $query['email'] ?? '';
+        return new EmailResource(
+            Email::with('attachments')
+            ->where('recipient',  $email)->paginate(10)
+        );
+    }
+    /**
+     * Return the status stats
+     */
+    public function emailStat()
+    {
+        return new EmailResource(
+            Email::groupBy('status')
+            ->selectRaw('count(id) as total, status')
+            ->get()
+        );
     }
 
     /**
@@ -101,6 +125,8 @@ class EmailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $find = Email::findOrFail($id);
+        $find->delete();
+        return new EmailResource($find);
     }
 }

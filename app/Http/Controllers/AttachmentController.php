@@ -40,9 +40,9 @@ class AttachmentController extends Controller
         //     'attachment' => 'required|file|image|size:1024',
         // ]);
         $response = [];
-        foreach($request->allFiles('attachments') as $file) {
+        $path = '/attachments/';
+        foreach($request->attachments as $file) {
             $name = time() . $file->getClientOriginalName();
-            $path = '/attachments/';
             $file->move(public_path($path), $name);
             $store = Attachment::create([
                 'mail_id' => '0',
@@ -50,6 +50,7 @@ class AttachmentController extends Controller
             ]);
             $response[] = $store->id ?? 0;
         }
+
         return new AttachmentResource($response);
     }
 
@@ -108,5 +109,16 @@ class AttachmentController extends Controller
             }
         }
         return $response;
+    }
+
+    public function updateMailAttachmentDetail($mailId, $attachmentId)
+    {
+        foreach($attachmentId as $id) {
+            if(!empty($id)) {
+                $data = Attachment::findOrFail($id);
+                $data->mail_id = $mailId;
+                $data->save();
+            }
+        }
     }
 }
