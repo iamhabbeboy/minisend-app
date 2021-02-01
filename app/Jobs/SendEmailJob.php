@@ -11,6 +11,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionMail;
+use App\Models\Email;
+use Throwable;
 
 class SendEmailJob implements ShouldQueue
 {
@@ -39,5 +41,19 @@ class SendEmailJob implements ShouldQueue
         Mail::to($this->request['recipients'])->send(
             new TransactionMail($this->files, $this->request)
         );
+    }
+
+      /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(Throwable $exception)
+    {
+        // Send user notification of failure, etc...
+        $find = Email::findOrFail($this->request['id']);
+        $find->status = 'failed';
+        $find->save();
     }
 }
