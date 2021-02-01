@@ -1,6 +1,7 @@
 import Home from "./views/Home.vue";
-import Compose from "./views/Compose.vue";
 import Single from "./views/Single.vue";
+import Compose from "./views/Compose.vue";
+import Recipient from "./views/Recipient.vue";
 
 export const routes = [
     {
@@ -17,5 +18,10 @@ export const routes = [
         path: "/single/:id",
         name: "single",
         component: Single
+    },
+    {
+        path: "/recipient/:email",
+        name: "recipient",
+        component: Recipient
     }
 ];
