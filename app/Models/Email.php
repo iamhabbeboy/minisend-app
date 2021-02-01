@@ -15,4 +15,12 @@ class Email extends Model
         'subject',
         'content'
     ];
+
+    /**
+     * Get the attachment files.
+     */
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'mail_id', 'id');
+    }
 }

@@ -15,6 +15,12 @@ use App\Http\Controllers\AttachmentController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('emails/search', [EmailController::class, 'search'])
+->name('emails.search');
+Route::get('emails/recipient', [EmailController::class, 'recipientEmails'])
+->name('emails.recipient');
+Route::get('emails/chart', [EmailController::class, 'emailStat'])
+->name('emails.stats');
 Route::resource('emails', EmailController::class);
 Route::resource('attachment', AttachmentController::class);
 

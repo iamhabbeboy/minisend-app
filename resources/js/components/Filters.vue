@@ -38,19 +38,17 @@ export default {
         searchEmailByQuery(event) {
             const query = event.target.value;
             if (!query.length) {
-                return this.$store.dispatch("getEmails");
+                return this.$store.dispatch("getEmails", { url: "" });
             }
-            const emails = this.$store.getters.getEmailByParams(query);
-            this.$store.commit("GET_EMAILS", emails);
+            this.$store.dispatch("getSearch", { query: query, status: "" });
         },
         searchEmail(event) {
             const query = this.query;
             const status = this.status;
-            const emails = this.$store.getters.getEmailBySearch(query, status);
-            // if(!emails.length) {
-            //       return this.$store.dispatch("getEmails");
-            // }
-             this.$store.commit("GET_EMAILS", emails);
+            if (status == '') {
+                this.$store.dispatch("getEmails", { url: "" });
+            }
+            this.$store.dispatch("getSearch", { query: query, status: status });
         }
     }
 };
