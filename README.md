@@ -16,3 +16,7 @@ Run the test with `npm run test`
 ### Start app 
 Run the app with `php artisan serve`
 
+### Job Listener 
+Run `php artisan queue:listen` to listen to mail queue
+
+
