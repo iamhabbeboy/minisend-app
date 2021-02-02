@@ -3,7 +3,7 @@
     <Header />
     <RenderChart />
     <router-link to="/compose" class="btn btn-lg btn-success">
-        Compose Mail
+        Compose Mail <i class="fa fa-plus-circle"></i>
     </router-link>
     <br />
     <br />

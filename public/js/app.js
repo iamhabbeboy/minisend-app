@@ -1884,9 +1884,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2136,8 +2133,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     stat: {
       handler: function handler(response, newVal) {
         var dataset = [],
-            payload = response.data || [];
-        var colors = ["#2a9d8f", "#e76f51", "#7D6B91"];
+            payload = response.data || [],
+            label = [];
 
         var _iterator = _createForOfIteratorHelper(payload.entries()),
             _step;
@@ -2148,11 +2145,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 index = _step$value[0],
                 data = _step$value[1];
 
-            dataset.push({
-              label: data.status,
-              data: [data.total],
-              backgroundColor: colors[index]
-            });
+            dataset.push(data.total);
+            label.push(data.status);
           }
         } catch (err) {
           _iterator.e(err);
@@ -2161,7 +2155,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         this.datacollection = {
-          datasets: dataset
+          labels: label,
+          datasets: [{
+            label: "Email Activity",
+            backgroundColor: "#2a9d8f",
+            data: dataset
+          }]
         };
       },
       deep: true
@@ -43275,7 +43274,10 @@ var render = function() {
       _c(
         "button",
         { staticClass: "btn btn-primary", on: { click: _vm.searchEmail } },
-        [_vm._v("Search")]
+        [
+          _vm._v("\n            Search "),
+          _c("i", { staticClass: "fa fa-search" })
+        ]
       )
     ])
   ])
@@ -43880,7 +43882,10 @@ var render = function() {
       _c(
         "router-link",
         { staticClass: "btn btn-lg btn-success", attrs: { to: "/compose" } },
-        [_vm._v("\n        Compose Mail\n    ")]
+        [
+          _vm._v("\n        Compose Mail "),
+          _c("i", { staticClass: "fa fa-plus-circle" })
+        ]
       ),
       _vm._v(" "),
       _c("br"),

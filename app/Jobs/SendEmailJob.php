@@ -18,8 +18,8 @@ class SendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $request;
-    private $files;
+    public $request;
+    public $files;
     /**
      * Create a new job instance.
      *

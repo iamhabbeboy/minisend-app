@@ -22,17 +22,22 @@ export default {
     watch: {
         stat: {
             handler: function(response, newVal) {
-                const dataset = [], payload = response.data || []
-                const colors = ["#2a9d8f","#e76f51", "#7D6B91"];
-                for(let [index, data] of payload.entries()) {
-                    dataset.push({
-                        label: data.status,
-                        data: [data.total],
-                        backgroundColor: colors[index],
-                    })
+                const dataset = [],
+                    payload = response.data || [],
+                    label = [];
+                for (let [index, data] of payload.entries()) {
+                    dataset.push(data.total);
+                    label.push(data.status);
                 }
                 this.datacollection = {
-                    datasets: dataset
+                    labels: label,
+                    datasets: [
+                        {
+                            label: "Email Activity",
+                            backgroundColor: "#2a9d8f",
+                            data: dataset
+                        }
+                    ]
                 };
             },
             deep: true
@@ -43,7 +48,7 @@ export default {
     },
     mounted() {
         this.$store.dispatch("getChartData");
-    },
+    }
 };
 </script>
 
