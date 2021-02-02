@@ -11,8 +11,8 @@ Run migration `php artisan migrate` to create all the tables required
 A dummy data is created to make setup easy. use 
 `php artisan db:seed`
 
-### Run Vue app test (jest)
-Run the test with `npm run test`
+### Run test (jest, phpunit) 
+Run the test with `npm run test` and `./vendor/bin/phpunit` for phpunit
 ### Start app 
 Run the app with `php artisan serve`
 
