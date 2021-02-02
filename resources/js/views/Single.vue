@@ -3,7 +3,6 @@
         <Header />
         <router-link to="/">&laquo; Back </router-link>
         <div style="background: #fff;padding: 4px">
-            {{  getemail ? getemail.subject : '' }}
             <h3>{{  getemail ? getemail.subject : '' }}</h3>
             <b>From:</b> {{ getemail ? getemail.sender : '' }} | <b>To:</b> {{ getemail ? getemail.recipient : '' }}
             <div class="body" v-html="getemail ? getemail.content : ''"></div>

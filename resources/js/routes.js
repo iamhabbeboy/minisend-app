@@ -2,6 +2,7 @@ import Home from "./views/Home.vue";
 import Single from "./views/Single.vue";
 import Compose from "./views/Compose.vue";
 import Recipient from "./views/Recipient.vue";
+import PageNotFound from "./views/PageNotFound.vue";
 
 export const routes = [
     {
@@ -23,5 +24,10 @@ export const routes = [
         path: "/recipient/:email",
         name: "recipient",
         component: Recipient
+    },
+    {
+        path: "*",
+        name: "notfound",
+        component: PageNotFound
     }
 ];

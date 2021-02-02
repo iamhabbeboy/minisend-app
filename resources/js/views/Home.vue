@@ -8,7 +8,6 @@
     <br />
     <br />
     <Listing :emails="emails" display="true" />
-    <!-- <Pagination /> -->
 </div>
 </template>
 
@@ -21,12 +20,6 @@ import {
 } from "vuex";
 
 export default {
-    data() {
-        return {
-            chartData: null,
-            test: null
-        }
-    },
     components: {
         Header,
         Listing,
@@ -40,7 +33,5 @@ export default {
             url: ''
         });
     },
-    mounted() {},
-    methods: {}
 };
 </script>
