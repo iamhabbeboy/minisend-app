@@ -8,7 +8,7 @@ Rename the `.env.example` to `.env` and add your `database` on this row in the f
 ### Migration
 Run migration `php artisan migrate` to create all the tables required
 ### Seeder
-A dummy data is created to at random to make setup easy. use 
+A dummy data is created to make setup easy. use 
 `php artisan db:seed`
 
 ### Run Vue app test (jest)
