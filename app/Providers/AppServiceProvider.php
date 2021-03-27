@@ -27,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // View::share('tenantColor', 'gray');
+        // View::share('tenantName', 'Admin');
+
         Queue::after(function (JobProcessed $event) {
             $payload = $event->job->payload();
             $job = unserialize($payload['data']['command']);

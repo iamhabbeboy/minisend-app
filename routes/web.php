@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,5 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{any?}', App\Http\Controllers\PagesController::class);
+// Route::get('/{any?}', App\Http\Controllers\PagesController::class);
+Route::get('/', function() {
+    dd("Hello world");
+});
+
+Route::domain('{subdomain}.minisend.local')->group(function () {
+    Route::get('/a', function ($subdomain){
+        dd($subdomain);
+    });
+});
 
